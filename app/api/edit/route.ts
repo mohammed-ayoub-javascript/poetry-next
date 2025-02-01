@@ -2,22 +2,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse, NextRequest } from "next/server";
 import { z } from "zod";
 import { marked } from "marked";
-const envSchema = z.object({
-  GEMINI_API_KEY: z.string().min(10),
-  NODE_ENV: z.enum(["development", "production"]).default("production"),
-});
-
-const env = envSchema.parse(process.env);
-
-const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({model: "gemini-1.5-flash",});
 
 
-
-const responseSchema = z.object({
-  result: z.string(),
-  error: z.string().optional(),
-});
 
 
 export async function POST(req: NextRequest , res : NextResponse) {
@@ -36,10 +22,19 @@ export async function POST(req: NextRequest , res : NextResponse) {
       );
     }
 
-    const {data} = await req.json();
+    const {data , API} = await req.json();
     console.log(data);
     
 
+    const genAI = new GoogleGenerativeAI(API);
+    const model = genAI.getGenerativeModel({model: "gemini-1.5-flash",});
+    
+    
+    
+    const responseSchema = z.object({
+      result: z.string(),
+      error: z.string().optional(),
+    });
     const formattedPoetry = data
     .map((verse : any, index  : any) => `البيت ${index + 1}: \n${verse.firstLine}\n${verse.secondLine}`)
     .join("\n\n");

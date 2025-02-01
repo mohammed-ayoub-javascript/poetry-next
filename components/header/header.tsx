@@ -1,9 +1,21 @@
 import React from 'react'
 import { Button } from '../ui/button'
-import { Code, FileText, Github } from 'lucide-react'
+import { Code, Code2, FileText, Github, X } from 'lucide-react'
 import { ModeToggle } from '../theme/mode-toggle'
 import Link from 'next/link'
-
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import SaveApiKey from './client/save-api-key'
+  
 const Header = () => {
   const githubLink = "https://github.com/mohammed-ayoub-javascript/poetry-next"
   return (
@@ -19,9 +31,29 @@ const Header = () => {
             </Link>
 
             <ModeToggle />
+            <AlertDialog>
+  <AlertDialogTrigger>
             <Button variant={"outline"}>
-                <FileText />
-            </Button>
+                <Code2 />
+            </Button>    
+  </AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>API</AlertDialogTitle>
+      <AlertDialogDescription>
+        <p>      For unlimited use, you can create an API key in Gemini API, then copy and paste it into the input field below. It will be saved locally on your device. If you need additional usage, you can generate a new API key again
+        </p>
+        <SaveApiKey />
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter className=' w-full'>
+    <AlertDialogCancel className=' w-full' >
+        <p className=' text-red-500'>Close</p>
+      </AlertDialogCancel>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+
         </div>
     </div>
   )

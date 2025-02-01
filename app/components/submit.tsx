@@ -43,11 +43,17 @@ const Submit = () => {
 
   const handelAI = (e: React.FormEvent) => {
     e.preventDefault();
+    const API = localStorage.getItem("API");
 
+    if(!API){
+      toast.error("يرجى اضافة مفتاح واجهة برمجة التطبيقات لبدا استخدام الذكاء الاصطناعي");
+
+      return 0;
+    }
     const sendtoAPI = axios
       .post(
         "/api/edit",
-        { data: verses },
+      { data: verses , API : API},
         {
           headers: {
             "Content-Type": "application/json",
