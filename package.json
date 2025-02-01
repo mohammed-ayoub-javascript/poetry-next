@@ -7,7 +7,7 @@
     "build": "npm install && next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "npm install --legacy-peer-deps",
+    "postinstall": "npm install --legacy-peer-deps"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
