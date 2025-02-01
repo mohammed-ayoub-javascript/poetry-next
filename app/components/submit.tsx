@@ -13,8 +13,6 @@ type Verse = {
   secondLine: string;
 };
 
-const FORBIDDEN_CHARS = new Set([" ", "ا", "أ", "إ", "آ", "ى", "و", "ة", "ه"]);
-
 const Submit = () => {
   const [verses, setVerses] = useState<Verse[]>([{ firstLine: "", secondLine: "" }]);
   const [savedVerses, setSavedVerses] = useState<Verse[]>([]);
@@ -26,13 +24,15 @@ const Submit = () => {
   }, []);
 
   const handleInputChange = (index: number, field: keyof Verse, value: string) => {
-    const newVerses = [...verses];
-    newVerses[index][field] = value;
-    setVerses(newVerses);
+    setVerses((prevVerses) => {
+      const newVerses = [...prevVerses];
+      newVerses[index][field] = value;
+      return newVerses;
+    });
   };
 
   const addVerse = () => {
-    setVerses([...verses, { firstLine: "", secondLine: "" }]);
+    setVerses((prevVerses) => [...prevVerses, { firstLine: "", secondLine: "" }]);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -41,38 +41,25 @@ const Submit = () => {
     setSavedVerses(verses);
   };
 
-  const handelAI = (e: React.FormEvent) => {
+  const handleAI = async (e: React.FormEvent) => {
     e.preventDefault();
     const API = localStorage.getItem("API");
 
-    if(!API){
-      toast.error("يرجى اضافة مفتاح واجهة برمجة التطبيقات لبدا استخدام الذكاء الاصطناعي");
-
-      return 0;
+    if (!API) {
+      toast.error("يرجى اضافة مفتاح واجهة برمجة التطبيقات لبدء استخدام الذكاء الاصطناعي");
+      return;
     }
-    const sendtoAPI = axios
-      .post(
-        "/api/edit",
-      { data: verses , API : API},
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data.result);
-        setAIContent(res.data.result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
 
-    toast.promise(sendtoAPI, {
-      loading: "يرجى الانتظار...",
-      success: <b>تم الاتصال</b>,
-      error: <b>حدث خطأ</b>,
-    });
+    try {
+      const response = await axios.post("/api/edit", { data: verses, API }, {
+        headers: { "Content-Type": "application/json" },
+      });
+      setAIContent(response.data.result);
+      toast.success("تم الاتصال بنجاح");
+    } catch (error) {
+      toast.error("حدث خطأ أثناء الاتصال");
+      console.error(error);
+    }
   };
 
   return (
@@ -128,7 +115,7 @@ const Submit = () => {
           )}
         </CardContent>
         <CardFooter>
-          <Button className="w-full" variant={"outline"} onClick={handelAI}>
+          <Button className="w-full" variant="outline" onClick={handleAI}>
             التنسيق بالذكاء الاصطناعي
           </Button>
         </CardFooter>
@@ -139,8 +126,8 @@ const Submit = () => {
           <CardHeader>
             <CardTitle>النتيجة من الذكاء الاصطناعي</CardTitle>
           </CardHeader>
-          <CardContent className=" w-1/2">
-            <ReactMarkdown className="prose prose-lg text-right ar" children={aiContent} />
+          <CardContent className="w-1/2">
+            <ReactMarkdown className="prose prose-lg text-right ar">{aiContent}</ReactMarkdown>
           </CardContent>
         </Card>
       )}

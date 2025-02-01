@@ -6,7 +6,7 @@ import { marked } from "marked";
 
 
 
-export async function POST(req: NextRequest , res : NextResponse) {
+export async function POST(req: NextRequest) {
   try {
     const origin = req.headers.get("origin");
     // if (origin && !origin.match(/^(https?:\/\/)?(localhost|\bexample\.com\b)/)) { 
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest , res : NextResponse) {
       error: z.string().optional(),
     });
     const formattedPoetry = data
-    .map((verse : any, index  : any) => `البيت ${index + 1}: \n${verse.firstLine}\n${verse.secondLine}`)
+    .map((verse: { firstLine: any; secondLine: any; }, index: number) => `البيت ${index + 1}: \n${verse.firstLine}\n${verse.secondLine}`)
     .join("\n\n");
   
   const safePrompt = `
@@ -63,7 +63,6 @@ export async function POST(req: NextRequest , res : NextResponse) {
     const sanitizedText = generatedText
       .replace(/[\<\>\[\]{}()]/g, "")
       .trim();
-    const htmlContent = marked(sanitizedText);
     return NextResponse.json(responseSchema.parse({ result: sanitizedText }), {
       headers: {
         "Content-Type": "application/json; charset=utf-8",
