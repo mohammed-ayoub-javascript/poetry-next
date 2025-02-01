@@ -95,7 +95,7 @@ const Submit = () => {
             إضافة بيت جديد
           </Button>
           <Button type="submit" className="flex-1">
-            حفظ الشعر
+            حفظ التغييرات
           </Button>
         </div>
       </form>
