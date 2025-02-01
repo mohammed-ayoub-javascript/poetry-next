@@ -1,7 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse, NextRequest } from "next/server";
 import { z } from "zod";
-import { marked } from "marked";
 
 
 
@@ -36,7 +35,7 @@ export async function POST(req: NextRequest) {
       error: z.string().optional(),
     });
     const formattedPoetry = data
-    .map((verse: { firstLine: any; secondLine: any; }, index: number) => `البيت ${index + 1}: \n${verse.firstLine}\n${verse.secondLine}`)
+    .map((verse: { firstLine: string; secondLine: string; }, index: number) => `البيت ${index + 1}: \n${verse.firstLine}\n${verse.secondLine}`)
     .join("\n\n");
   
   const safePrompt = `

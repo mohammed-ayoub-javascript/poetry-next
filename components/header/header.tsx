@@ -1,11 +1,10 @@
 import React from 'react'
 import { Button } from '../ui/button'
-import { Code, Code2, FileText, Github, X } from 'lucide-react'
+import {  Code2, Github} from 'lucide-react'
 import { ModeToggle } from '../theme/mode-toggle'
 import Link from 'next/link'
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
